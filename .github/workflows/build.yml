@@ -1,0 +1,30 @@
+name: Build and test
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bundle:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Build toolchain
+        run: make image
+      - name: Run offline tests
+        run: make test
+      - name: Build release bundle
+        run: make release
+      - uses: actions/upload-artifact@v7
+        with:
+          name: futo-enhancements
+          path: build/dist/
+          if-no-files-found: error
+          retention-days: 14

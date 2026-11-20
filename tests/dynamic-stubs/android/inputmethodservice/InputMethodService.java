@@ -1,0 +1,1 @@
+package android.inputmethodservice; public class InputMethodService extends android.content.Context { public final android.view.inputmethod.EditorInfo info=new android.view.inputmethod.EditorInfo(); public android.view.inputmethod.EditorInfo getCurrentInputEditorInfo(){return info;} }

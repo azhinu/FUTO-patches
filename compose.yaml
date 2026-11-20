@@ -1,0 +1,10 @@
+services:
+  dev:
+    build: .
+    image: futo-keyboard-enhancements:dev
+    platform: linux/amd64
+    working_dir: /project
+    user: "${LOCAL_UID:-0}:${LOCAL_GID:-0}"
+    volumes:
+      - .:/project
+      - ./.local/morphe-data:/opt/morphe/morphe-data

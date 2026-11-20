@@ -1,0 +1,27 @@
+# Local state: original APKs, signing identities and private notes.
+.local/
+.secrets/
+.env
+.env.*
+!.env.example
+
+# Generated output.
+build/
+*.apk
+*.apks
+*.apkm
+*.xapk
+*.mpp
+*.jar
+*.dex
+*.class
+*.jks
+*.keystore
+*.key
+*.pem
+*.log
+__pycache__/
+*.py[cod]
+.DS_Store
+.idea/
+.vscode/
