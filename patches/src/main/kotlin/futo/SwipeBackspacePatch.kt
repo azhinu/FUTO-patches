@@ -11,7 +11,7 @@ val swipeBackspacePatch=patch(
     description="Optional character deletion after swipe typing; holding backspace deletes the edited word.",
     default=false
 ) {
-    compatibleWith(target)
+    compatibleWith(*targets)
     dependsOn(extensionPatch)
     execute {
         mutableClassDefBy("Lfuto/enhancements/Config;").methods.single { it.name=="swipeBackspaceInstalled" }.returnEarly(true)

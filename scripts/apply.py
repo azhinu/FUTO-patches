@@ -4,9 +4,11 @@ import argparse
 import json
 import os
 import pathlib
+import re
 import subprocess
 import tempfile
 import zipfile
+from targets import AAPT, package_name, ime_metadata_path
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 NAMES = ["Dynamic suggestion bar", "Remote speech backends", "Android IME layout subtypes", "System spell checker", "Spacebar long press duration", "Character backspace after swipe"]
@@ -21,9 +23,11 @@ bundle = args.bundle or ROOT / ("build/dist/futo-enhancements-" + (ROOT / "VERSI
 selected = set(args.patch or NAMES)
 if args.output.exists():
     raise SystemExit("Output already exists; choose a new path")
-badging = subprocess.check_output(["/opt/android/android-16/aapt2", "dump", "badging", str(args.apk)], text=True)
-if not all(value in badging.splitlines()[0] for value in ["name='org.futo.inputmethod.latin.playstore'"]):
-    raise SystemExit("Unsupported target: expected org.futo.inputmethod.latin.playstore")
+badging = subprocess.check_output([AAPT, "dump", "badging", str(args.apk)], text=True)
+try:
+    original_package = package_name(badging)
+except ValueError as error:
+    raise SystemExit(str(error)) from error
 args.output.parent.mkdir(parents=True, exist_ok=True)
 with tempfile.TemporaryDirectory(prefix="futo-apply-", dir=args.output.parent) as temp:
     staged, report = pathlib.Path(temp) / "patched.apk", pathlib.Path(temp) / "result.json"
@@ -39,11 +43,17 @@ with tempfile.TemporaryDirectory(prefix="futo-apply-", dir=args.output.parent) a
     with zipfile.ZipFile(staged) as apk:
         if "AndroidManifest.xml" not in apk.namelist():
             raise SystemExit("Patched APK is incomplete")
-    permissions = subprocess.check_output(["/opt/android/android-16/aapt2", "dump", "permissions", str(staged)], text=True)
+    patched_badging = subprocess.check_output([AAPT, "dump", "badging", str(staged)], text=True)
+    if package_name(patched_badging) != original_package:
+        raise SystemExit("Patched APK changed its package; no APK published")
+    permissions = subprocess.check_output([AAPT, "dump", "permissions", str(staged)], text=True)
     if "Remote speech backends" in selected and "android.permission.INTERNET" not in permissions:
         raise SystemExit("Patched APK is missing INTERNET; no APK published")
     if "android.permission.RECORD_AUDIO" not in permissions:
         raise SystemExit("Patched APK lost RECORD_AUDIO; no APK published")
+    metadata = subprocess.check_output([AAPT, "dump", "xmltree", "--file", ime_metadata_path(staged), str(staged)], text=True)
+    if "System spell checker" in selected and not re.search(r"suppressesSpellChecker.*=false", metadata):
+        raise SystemExit("Patched APK still suppresses spell checking; no APK published")
     result["outputPath"] = str(args.output.resolve())
     staged.replace(args.output)
     args.output.with_suffix(".result.json").write_text(json.dumps(result, indent=2))

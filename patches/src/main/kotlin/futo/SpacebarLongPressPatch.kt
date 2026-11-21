@@ -10,7 +10,7 @@ val spacebarLongPressPatch=patch(
     description="Configure the spacebar delay at runtime: original FUTO, keyboard duration, or a custom duration.",
     default=false
 ) {
-    compatibleWith(target)
+    compatibleWith(*targets)
     dependsOn(extensionPatch)
     execute {
         mutableClassDefBy("Lfuto/enhancements/Config;").methods.single { it.name=="spacebarInstalled" }.returnEarly(true)

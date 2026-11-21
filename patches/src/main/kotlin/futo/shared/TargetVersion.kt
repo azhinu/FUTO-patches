@@ -1,8 +1,11 @@
 package futo.shared
 import app.morphe.patcher.PackageMetadata
 import app.morphe.patcher.patch.*
-val target = Compatibility(packageName = "org.futo.inputmethod.latin.playstore", name = "FUTO Keyboard")
+val targets = arrayOf(
+    Compatibility(packageName = "org.futo.inputmethod.latin.playstore", name = "FUTO Keyboard"),
+    Compatibility(packageName = "org.futo.inputmethod.latin.unstable", name = "RUTO Keyboard")
+)
 fun verifyTarget(metadata: PackageMetadata) {
-    if (metadata.packageName != "org.futo.inputmethod.latin.playstore")
+    if (targets.none { it.packageName == metadata.packageName })
         throw PatchException("Unsupported target: ${metadata.packageName}")
 }

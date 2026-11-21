@@ -22,6 +22,17 @@ object Fingerprints {
         return mutableClassDefBy(type).methods.singleOrNull { signature(it)==signature }
             ?: throw PatchException("Target method missing or ambiguous: $signature")
     }
+    fun recorderConstructor(): MutableMethod {
+        // R8 merged ModelManager into different classes in the inspected APKs.
+        // Keep the complete signatures explicit; all instruction guards still apply.
+        val signatures = listOf(
+            "Lorg/futo/voiceinput/shared/AudioRecognizer;-><init>(Lorg/futo/inputmethod/latin/LatinIME;Landroidx/lifecycle/LifecycleCoroutineScopeImpl;Lkotlinx/coroutines/flow/SharingConfig;Lcom/charleskorn/kaml/YamlParser;Lorg/futo/voiceinput/shared/AudioRecognizerSettings;)V",
+            "Lorg/futo/voiceinput/shared/AudioRecognizer;-><init>(Lorg/futo/inputmethod/latin/LatinIME;Landroidx/lifecycle/LifecycleCoroutineScopeImpl;Lorg/acra/scheduler/SchedulerStarter;Lcom/charleskorn/kaml/YamlParser;Lorg/futo/voiceinput/shared/AudioRecognizerSettings;)V"
+        )
+        return mutableClassDefBy("Lorg/futo/voiceinput/shared/AudioRecognizer;").methods.singleOrNull {
+            signature(it) in signatures
+        } ?: throw PatchException("Target recorder constructor missing or ambiguous")
+    }
 }
 // Compatibility is structural, not a whitelist of release numbers or instruction hashes.
 val preflight = patch {

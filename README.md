@@ -1,7 +1,8 @@
 # FUTO Keyboard Enhancements
 
 Six independent [Morphe](https://github.com/MorpheApp/morphe-manager) patches for
-[FUTO Keyboard](https://github.com/futo-org/android-keyboard): remote dictation,
+[FUTO Keyboard](https://github.com/futo-org/android-keyboard) and
+[RUTO Keyboard](https://github.com/MisterFenek/ruto-keyboard): remote dictation,
 a shared action/suggestion row, Android layout switching, and a few typing fixes.
 
 This patches an existing APK. It does not build a fork of FUTO, rename its package,
@@ -38,7 +39,8 @@ character backspace have runtime switches; remote audio requires explicit consen
 
 ## Compatibility
 
-- **Package:** `org.futo.inputmethod.latin.playstore`.
+- **Packages:** `org.futo.inputmethod.latin.playstore` (FUTO) and
+  `org.futo.inputmethod.latin.unstable` (the inspected RUTO release).
 - **Tested baseline:** FUTO `0.1.30-playstore`, version code `11751`.
 - **Device checks:** Pixel 8, Android 17 / API 37.
 - **Manager checks:** Morphe Manager 2.5.0, embedded Patcher 2.3.0.
@@ -46,7 +48,29 @@ character backspace have runtime switches; remote audio requires explicit consen
 Versions are deliberately **not pinned**. You can try another Play Store release;
 the patches check the methods, fields and instruction flows they need and stop
 when those structures do not match. This is not universal compatibility.
-GitHub and F-Droid package variants are outside the declared target.
+The base `org.futo.inputmethod.latin` package and F-Droid variants are outside
+the declared target.
+
+### RUTO
+
+All six patches also target the APK linked by RUTO's README as
+`futo-keyboard-ru-1.0.2.apk`. Its actual manifest declares **1.0.1-ru-unstable**,
+version code **101**, package **org.futo.inputmethod.latin.unstable**. The filename
+is not the app's internal version. See [RUTO adaptation](docs/ruto.md) for the
+inspected hash, compatibility changes and test scope. Basic RUTO checks were also
+performed on Pixel 8 / Android 17. Its Russian model exposed an upstream native
+crash, reproduced without these patches and resolved by repairing one GGUF
+feature flag. See [Native crash diagnosis](docs/ruto-native-crash.md) before using
+the inspected Russian model. Historical FUTO results do not certify every RUTO flow.
+
+Apply the same bundle in Morphe Manager, or use Docker:
+
+```sh
+make patch APK=.local/ruto/ruto-1.0.2.apk OUTPUT=build/dist/ruto-patched.apk
+```
+
+Native libraries, language models and original assets are preserved byte for byte
+by the tested patch combinations. This bundle adds no language-model replacement.
 
 ## Build
 
@@ -77,8 +101,8 @@ through Docker MCP; see [Development](docs/development.md).
 
 ## Apply to an APK
 
-**The original FUTO APK is not included.** Obtain your own unpatched Play Store
-build. Split APKs must be merged first; [APKEditor](https://github.com/REAndroid/APKEditor)
+**Original APKs are not included.** Obtain an unpatched FUTO Play Store build or
+the RUTO APK linked by its author. Split APKs must be merged first; [APKEditor](https://github.com/REAndroid/APKEditor)
 is one upstream tool for that job.
 
 Import the MPP as a local source in Morphe Manager, select the original APK, then

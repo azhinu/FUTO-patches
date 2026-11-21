@@ -36,7 +36,7 @@ val remoteWhisperPatch=patch(
     description="OpenRouter, Whisper ASR Webservice and OpenAI-compatible transcription through FUTO's original recorder and insertion flow. Local is the default.",
     default=false
 ) {
-    compatibleWith(target)
+    compatibleWith(*targets)
     dependsOn(extensionPatch,remoteResources)
     execute {
         mutableClassDefBy("Lfuto/enhancements/Config;").methods.single { it.name=="remoteInstalled" }.returnEarly(true)
@@ -53,7 +53,7 @@ val remoteWhisperPatch=patch(
         """)
         Fingerprints.method("Lorg/futo/voiceinput/shared/AudioRecognizer;->reset()V")
             .addInstructions(0,"invoke-static/range {p0 .. p0}, Lfuto/enhancements/Remote;->cancel(Ljava/lang/Object;)V")
-        val ctor=Fingerprints.method("Lorg/futo/voiceinput/shared/AudioRecognizer;-><init>(Lorg/futo/inputmethod/latin/LatinIME;Landroidx/lifecycle/LifecycleCoroutineScopeImpl;Lkotlinx/coroutines/flow/SharingConfig;Lcom/charleskorn/kaml/YamlParser;Lorg/futo/voiceinput/shared/AudioRecognizerSettings;)V")
+        val ctor=Fingerprints.recorderConstructor()
         val code=ctor.implementation!!.instructions
         fun fieldIndex(name:String)=code.indices.singleOrNull {
             (code[it] as? ReferenceInstruction)?.reference.toString().contains("AudioRecognizer;->$name:")

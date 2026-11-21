@@ -8,6 +8,16 @@
 - Generate synthetic speech fixtures during the build.
 - Add a portable Make/Compose workflow, offline CI and source-only release packaging.
 
+## 0.3.1
+
+- Declare RUTO's actual `org.futo.inputmethod.latin.unstable` package alongside FUTO Play Store.
+- Recognize both inspected R8 recorder constructor signatures without weakening instruction guards.
+- Select the exact native settings constructor when RUTO retains a default-mask overload.
+- Resolve compiled IME metadata through the resource table, including shortened resource paths.
+- Check package preservation and native-library/asset integrity in the real APK matrix.
+- Diagnose RUTO's Russian native crash with and without patches; provide a lossless,
+  hash-guarded model metadata repair and a real-device regression replay.
+
 ## 0.3.0
 
 - Add optional character backspace after swipe, with word deletion on hold.

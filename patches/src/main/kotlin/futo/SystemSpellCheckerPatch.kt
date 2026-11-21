@@ -6,7 +6,7 @@ val systemSpellCheckerPatch = patch(
     description = "Allow Android's selected SpellCheckerService while FUTO is active.",
     default = false
 ) {
-    compatibleWith(target)
+    compatibleWith(*targets)
     execute {
         imeMetadata { root ->
             val value=root.getAttributeNS(androidNs,"suppressesSpellChecker")

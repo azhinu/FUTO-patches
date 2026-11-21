@@ -19,6 +19,9 @@ Downloaded APKs, decompilations and upstream source checkouts are not kept here.
 | InputLogic.onCodeInput | Resume gesture text before deletion and adjust its hold-mode read |
 
 The Kotlin patch definitions contain the concrete signatures and field guards.
+The [RUTO inspection](ruto.md) records its alternate recorder constructor,
+settings overload and shortened compiled resource path. Java package namespaces
+remain `org.futo.*` even though its application ID differs from the Play Store app.
 Recorder loading and action-bar results use semantic references rather than
 fixed instruction offsets. Parameter register ranges avoid scratch-register
 assumptions in the large input handler.

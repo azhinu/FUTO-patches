@@ -6,6 +6,7 @@ It does not vendor the projects below, FUTO APKs or their source trees.
 | Project | Use | Version used by the build |
 | --- | --- | --- |
 | [FUTO Keyboard](https://github.com/futo-org/android-keyboard) | Target application and architecture reference | Tested Play Store baseline 0.1.30 |
+| [RUTO Keyboard](https://github.com/MisterFenek/ruto-keyboard) | Additional target; source and APK inspection | Download labeled 1.0.2; internal 1.0.1-ru-unstable / 101 |
 | [Morphe Desktop](https://github.com/MorpheApp/morphe-desktop) | Compiler classpath and patching CLI | 2.2.0 |
 | [Morphe Patcher](https://github.com/MorpheApp/morphe-patcher) | Patch API provided by the CLI/Manager | Bundle minimum 2.3.0 |
 | [Morphe Manager](https://github.com/MorpheApp/morphe-manager) | Phone-side bundle import and patching | Tested 2.5.0 |

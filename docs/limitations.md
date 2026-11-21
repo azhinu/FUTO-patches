@@ -4,7 +4,16 @@
 
 The real release tested is 0.1.30-playstore (11751). Other Play Store versions can
 be attempted, but R8 changes can invalidate reflected APIs or injection structures.
-GitHub/F-Droid flavors are not declared compatible.
+RUTO's published APK (`org.futo.inputmethod.latin.unstable`, internal version
+1.0.1-ru-unstable / 101) is also supported and has passed the APK patching matrix.
+Other GitHub/F-Droid packages are not declared compatible. This package ID is
+shared with FUTO unstable builds; it does not identify the RUTO author by itself.
+Structural checks remain required. See [RUTO adaptation](ruto.md) for device status.
+
+The inspected RUTO Russian 65M model is missing an embedding-mixing feature flag.
+Unpatched RUTO also crashes while correcting Russian input with that file. The
+separate [metadata repair](ruto-native-crash.md) preserves tensor weights and was
+verified on the phone. The six-patch bundle does not silently rewrite user models.
 
 Morphe Manager 2.5.0 / Patcher 2.3.0 loaded the bundle during development.
 The build uses the pinned Desktop CLI for JVM-side patching tests.

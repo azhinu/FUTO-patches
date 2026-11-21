@@ -10,7 +10,7 @@ val dynamicSuggestionBarPatch=patch(
     description="Use FUTO's original action row for actions when idle and suggestions while composing. Configurable at runtime.",
     default=false
 ) {
-    compatibleWith(target)
+    compatibleWith(*targets)
     dependsOn(extensionPatch)
     execute {
         mutableClassDefBy("Lfuto/enhancements/Config;").methods.single { it.name=="dynamicInstalled" }.returnEarly(true)

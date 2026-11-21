@@ -10,7 +10,7 @@ val imeSubtypesPatch=patch(
     description="Register enabled FUTO layouts with stable identities and synchronize Android and FUTO selections.",
     default=false
 ) {
-    compatibleWith(target)
+    compatibleWith(*targets)
     dependsOn(runtimePatch)
     execute {
         mutableClassDefBy("Lfuto/enhancements/Config;").methods.single { it.name=="subtypesInstalled" }.returnEarly(true)

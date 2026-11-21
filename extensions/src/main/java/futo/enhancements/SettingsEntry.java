@@ -44,7 +44,10 @@ public final class SettingsEntry {
         return id;
     }
     private static Object row(String resource,Render render) throws Exception {
-        return Arrays.stream(Reflect.type(SETTINGS+"UserSetting").getConstructors()).filter(c->c.getParameterCount()==8).findFirst().get()
+        // RUTO retains another eight-parameter constructor with an int default mask.
+        // Reflection constructor order is unspecified; select the exact native ABI.
+        Class<?> function2=Reflect.type("kotlin.jvm.functions.Function2");
+        return Reflect.type(SETTINGS+"UserSetting").getConstructor(int.class,Integer.class,Integer.class,List.class,function2,boolean.class,boolean.class,function2)
             .newInstance(resource(resource),null,null,null,null,false,true,component(render));
     }
     private static Object state(String key,Object initial) throws Exception {

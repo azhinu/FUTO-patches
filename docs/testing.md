@@ -20,7 +20,7 @@ No live provider credentials or microphone input are used.
 
 ## Real Morphe matrix
 
-Provide your own merged, original Play Store APK:
+Provide an original FUTO Play Store or RUTO unstable APK (merge splits first):
 
 ```sh
 make integration APK=.local/apks/futo-playstore.apk
@@ -29,7 +29,9 @@ make integration APK=.local/apks/futo-playstore.apk
 The fourteen cases cover all six patches individually, the two keyboard controls
 together, both resource patches in both selection orders, all patches together,
 an unsupported package, two synthetic version-name changes and a missing timer
-method. Reports, permissions, compiled metadata and return-site hooks are checked.
+method. Reports, permissions, compiled metadata, package preservation and
+return-site hooks are checked. Every original native library and asset is hashed
+and compared with the patched output, including RUTO's models and swipe libraries.
 
 Invalid targets must produce no APK. Synthetic fixtures are derived from the
 supplied APK at runtime; a second downloaded APK is not required. Version fixtures
@@ -37,6 +39,24 @@ retain the same DEX and therefore do not establish another release's compatibili
 
 Results go to `build/matrix-results.json`. The wrapper in `scripts/apply.py`
 also validates the complete patch report before publishing its output.
+
+The RUTO adaptation run on 2026-11-21 passed all fourteen cases and all offline
+JVM suites. Its internal version is 1.0.1-ru-unstable (101), despite the download
+filename containing 1.0.2. Device results are tracked separately in
+[RUTO adaptation](ruto.md); historical FUTO checks below do not certify RUTO.
+
+The connected Pixel 8 subsequently exercised RUTO's native settings, backend
+forms, English input, row switching, system layout selection and effective spell
+suppression. A Russian SIGSEGV was reproduced on both patched and unpatched RUTO;
+the same replay passed after the model metadata repair. The cold-start replay
+asserts the actual text, process stability and absence of the native crash:
+
+```sh
+python3 scripts/test-ruto-native.py --serial YOUR_ADB_SERIAL --letters 6 --cold-start
+```
+
+This coordinate replay requires the documented 1080x2400 Pixel layout and the
+synthetic editor harness. See [Native crash diagnosis](ruto-native-crash.md).
 
 ## Device harness
 
